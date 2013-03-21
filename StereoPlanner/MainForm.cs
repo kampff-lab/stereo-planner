@@ -21,8 +21,9 @@ namespace StereoPlanner
     {
         const float DefaultMarkerSize = 3;
         const float SelectionThreshold = 10;
-        const float DepthWindowSize = 12;
-        static readonly Vector2 DepthWindowPosition = new Vector2(8, 18);
+        const float DepthWindowWidth = 7.5f;
+        const float DepthWindowHeight = 5;
+        static readonly Vector2 DepthWindowPosition = new Vector2(2.5f, 9);
 
         StereotacticProtocol protocol;
         int version;
@@ -135,7 +136,13 @@ namespace StereoPlanner
 
             if (closest != null)
             {
-                var text = string.Format("{0:f4}\nAP:{1:f4}\nML:{2:f4}", closest.point.Name, closest.position.Y, closest.position.X);
+                var text = string.Format(
+                    "{0:f2}\nAP:{1:f2} ({2:+0.00;-0.00})\nML:{3:f2} ({4:+0.00;-0.00})",
+                    closest.point.Name,
+                    closest.position.Y,
+                    closest.point.Name == protocol.ReferencePoint ? 0 : closest.point.AnteriorPosterior,
+                    closest.position.X,
+                    closest.point.Name == protocol.ReferencePoint ? 0 : closest.point.MedioLateral);
                 spriteBatch.DrawString(font, text, closest.renderPosition, 0, Vector2.One, closest.point.Color);
             }
 
@@ -149,9 +156,9 @@ namespace StereoPlanner
                 spriteBatch.DrawVertices(new[]
                 {
                     DepthWindowPosition,
-                    DepthWindowPosition + DepthWindowSize * Vector2.UnitX,
-                    DepthWindowPosition + DepthWindowSize * new Vector2(1, -1),
-                    DepthWindowPosition - DepthWindowSize * Vector2.UnitY,
+                    DepthWindowPosition + DepthWindowWidth * Vector2.UnitX,
+                    DepthWindowPosition + new Vector2(DepthWindowWidth, -DepthWindowHeight),
+                    DepthWindowPosition - DepthWindowHeight * Vector2.UnitY,
                     DepthWindowPosition
                 }, BeginMode.LineStrip, Color.White);
 
@@ -160,8 +167,8 @@ namespace StereoPlanner
 
                 var targetPositions = from target in selectedPoint.DorsoVentralTargets
                                       let depth = target.DorsoVentral + selectedPoint.DorsoVentralReference
-                                      let position = new Vector2(DepthWindowPosition.X + DepthWindowSize / 2, DepthWindowPosition.Y - DepthWindowSize / 2 + (float)target.DorsoVentral)
-                                      select new { name = target.Name, depth, position };
+                                      let position = new Vector2(DepthWindowPosition.X + DepthWindowWidth * 0.1f, DepthWindowPosition.Y - DepthWindowHeight * 0.2f + (float)target.DorsoVentral)
+                                      select new { name = target.Name, depth, position, target.DorsoVentral };
                 spriteBatch.DrawVertices(targetPositions.Select(ts => ts.position), BeginMode.Points, Color.Red);
 
                 var closestDepth = (from target in targetPositions
@@ -172,18 +179,13 @@ namespace StereoPlanner
 
                 if (closestDepth != null)
                 {
-                    var text = string.Format("{0:f4}\nDV:{1:f4}", closestDepth.target.name, closestDepth.target.depth);
+                    var text = string.Format("{0:f2}\nDV:{1:f2} ({2:+0.00;-0.00})", closestDepth.target.name, closestDepth.target.depth, closestDepth.target.DorsoVentral);
                     spriteBatch.DrawString(font, text, closestDepth.target.position, 0, Vector2.One, Color.Red);
                 }
             }
 
             spriteBatch.End();
             glControl.SwapBuffers();
-        }
-
-        void UpdateSaveStatus()
-        {
-            saveToolStripButton.Enabled = saveToolStripMenuItem.Enabled = saveVersion != version;
         }
 
         private void glControl_Load(object sender, EventArgs e)
@@ -193,7 +195,7 @@ namespace StereoPlanner
 
             camera = new Camera2D();
             spriteBatch = new SpriteBatch(glControl.Width, glControl.Height);
-            spriteBatch.PixelsPerMeter = 10;
+            spriteBatch.PixelsPerMeter = 20;
 
             var fontStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("StereoPlanner.Resources.LiberationMono-Regular.spf");
             font = SpriteFont.FromStream(fontStream);
@@ -254,7 +256,6 @@ namespace StereoPlanner
                     var serializer = new XmlSerializer(typeof(StereotacticProtocol));
                     serializer.Serialize(writer, protocol);
                     saveVersion = version;
-                    UpdateSaveStatus();
                 }
             }
         }
