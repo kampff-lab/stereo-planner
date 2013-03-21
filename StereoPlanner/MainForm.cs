@@ -272,7 +272,12 @@ namespace StereoPlanner
         {
             var cursor = PickModelPoint();
             var reference = GetReferencePoint();
-            selectedPoint = ClosestPoint(cursor, reference); 
+            selectedPoint = ClosestPoint(cursor, reference);
+            if (selectedPoint != null)
+            {
+                propertyGrid.SelectedObject = selectedPoint;
+            }
+            else propertyGrid.SelectedObject = protocol;
         }
     }
 }
