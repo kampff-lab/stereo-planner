@@ -19,9 +19,11 @@ namespace StereoPlanner.Model
             Color = Color.White;
         }
 
+        [Category(Constants.AppearanceCategory)]
         public string Name { get; set; }
 
         [XmlIgnore]
+        [Category(Constants.AppearanceCategory)]
         public Color Color { get; set; }
 
         [Browsable(false)]
@@ -32,8 +34,10 @@ namespace StereoPlanner.Model
             set { Color = ColorTranslator.FromHtml(value); }
         }
 
+        [Category(Constants.CoordinatesCategory)]
         public double AnteriorPosterior { get; set; }
 
+        [Category(Constants.CoordinatesCategory)]
         public double MedioLateral { get; set; }
 
         public Collection<StereotacticDepth> DorsoVentralTargets

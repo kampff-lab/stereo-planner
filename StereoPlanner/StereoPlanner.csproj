@@ -53,6 +53,7 @@
     <Compile Include="AntiAliasedGLControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="Graphics\Camera2D.cs" />
     <Compile Include="Graphics\GraphicsResource.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Model\ProtocolShape.cs" />
     <Compile Include="Model\ProtocolVariable.cs" />
     <Compile Include="Model\ProtocolVariableCollection.cs" />
+    <Compile Include="Model\ReferencePointTypeConverter.cs" />
     <Compile Include="Model\StereotacticDepth.cs" />
     <Compile Include="Model\StringVariable.cs" />
     <Compile Include="Program.cs" />

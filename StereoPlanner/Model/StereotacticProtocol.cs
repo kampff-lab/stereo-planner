@@ -14,6 +14,7 @@ namespace StereoPlanner.Model
         readonly ProtocolShapeCollection shapes = new ProtocolShapeCollection();
 
         [DisplayName("Reference")]
+        [TypeConverter(typeof(ReferencePointTypeConverter))]
         public string ReferencePoint { get; set; }
 
         public StereotacticPointCollection Points
