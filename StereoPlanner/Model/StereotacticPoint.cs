@@ -34,6 +34,10 @@ namespace StereoPlanner.Model
             set { Color = ColorTranslator.FromHtml(value); }
         }
 
+        [Category(Constants.ProtocolCategory)]
+        [TypeConverter(typeof(NowDateTimeConverter))]
+        public DateTime Intervention { get; set; }
+
         [Category(Constants.CoordinatesCategory)]
         public double AnteriorPosterior { get; set; }
 
