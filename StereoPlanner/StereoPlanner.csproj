@@ -68,6 +68,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\EllipseShape.cs" />
+    <Compile Include="Model\NowDateTimeConverter.cs" />
     <Compile Include="Model\ProtocolShapeCollection.cs" />
     <Compile Include="Model\DateTimeVariable.cs" />
     <Compile Include="Model\DoubleVariable.cs" />
